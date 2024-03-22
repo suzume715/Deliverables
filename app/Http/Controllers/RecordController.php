@@ -11,4 +11,9 @@ class RecordController extends Controller
     {
         return view('records.index')->with(['records' => $record->getPaginateByLimit()]);
     }
+    
+    public function show(Record $record)
+    {
+        return view('records.show')->with(['record' => $record]);
+    }
 }

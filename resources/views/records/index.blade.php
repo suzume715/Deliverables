@@ -8,7 +8,10 @@
         <div class='records'>
             @foreach($records as $record)
                 <div class='record'>
-                    <h2 class='title'>タイトル：{{ $record->title }}</h2>
+                    <h2 class='title'>
+                        タイトル：
+                        <a href="/records/{{ $record->id }}">{{ $record->title }}</a>
+                    </h2>
                     <p class='body'>先手：{{ $record->first_player_name }}</p>
                     <p class='body'>後手：{{ $record->second_player_name }}</p>
                     <p class='body'>先手の戦型：{{ $record->first_player_strategy }}</p>
