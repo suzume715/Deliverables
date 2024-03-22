@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
 
 Route::controller(RecordController::class)->middleware(['auth'])->group(function(){
     Route::get('/', 'index')->name('index');
+    Route::get('/records/{record}', 'show')->name('show');
 });
 
 require __DIR__.'/auth.php';
