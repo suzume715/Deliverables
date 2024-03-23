@@ -5,6 +5,7 @@
         <h1>棋譜投稿サイト</h1>
     </x-slot>
         <h1>投稿一覧</h1>
+        <small>{{ $record->user->name }}</small>
         <div class='records'>
             <div class='record'>
                 <h2 class='title'>
