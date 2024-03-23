@@ -11,7 +11,7 @@ class Record extends Model
     
     public function getPaginateByLimit(int $limit_count = 10)
     {
-        return $this->orderBy('updated_at', 'DESC')->paginate($limit_count);
+        return $this::with('user')->orderBy('updated_at', 'DESC')->paginate($limit_count);
     }
     
     public function user()   
@@ -23,4 +23,17 @@ class Record extends Model
     {
         return $this->hasMany(Comment::class);  
     }
+    
+    protected $fillable = [
+        'title',
+        'user_id',
+        'first_player_name',
+        'second_player_name',
+        'first_player_strategy',
+        'second_player_strategy',
+        'first_player_castle',
+        'second_player_castle',
+        'remark',
+        'record'
+    ];
 }

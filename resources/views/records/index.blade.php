@@ -25,5 +25,8 @@
         <div class='paginate'>
             {{ $records->links() }}
         </div>
+        <div class='create'>
+            <a href='records/create'>新規投稿</a>
+        </div>
     </x-app-layout>
 </html>
