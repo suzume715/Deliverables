@@ -8,11 +8,13 @@
         <h1>投稿詳細</h1>
         <div class="edit"><a href="/records/{{ $record->id }}/edit">edit</a></div>
         <small>{{ $record->user->name }}</small>
-        <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" onclick="deletePost({{ $record->id }})">delete</button> 
-                </form>
+        <div class='delete'>
+            <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="deletePost({{ $record->id }})">delete</button> 
+            </form>
+        </div>
         <div class='record'>
             <h2 class='title'>
                 タイトル：
@@ -57,12 +59,43 @@
                 {{ $record->record }}
             </script>
         <div class="comment">
-            @foreach($record->comments as $comment)  
-                <p>{{ $comment->comment }}</p>
+            @foreach($record->comments as $comment)
+                <div class="comment_{{ $comment->id }}" style="display: block">
+                    <p class="comment_{{ $comment->id }}">{{ $comment->comment }}</p>
+                    <button type="button" onclick="editComment({{ $comment->id }})" >編集</button>
+                </div>
+                <div class="comment_{{ $comment->id }}" style="display: none">
+                    <form action="/comments/{{ $comment->id }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type='hidden' name='comment[record_id]' value="{{ $record->id }}">
+                        <textarea type="text" name="comment[comment]">{{ old('comment.comment', $comment->comment) }}</textarea><br>
+                        <p class="comment__error" style="color:red">{{ $errors->first('comment.comment') }}</p>
+                        <input type="submit" value="保存"/>
+                    </form>
+                    <button type="button" onclick="editComment({{ $comment->id }})" >戻る</button>
+                </div>
+                <small>{{ $comment->user->name }}</small>
+                <div class='delete'>
+                    <form action="/comments/{{ $comment->id }}" id="form_{{ $comment->id }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="deleteComment({{ $comment->id }})">delete</button> 
+                    </form>
+                </div>
                 @foreach($comment->replies as $reply)
                     <p>{{ $reply->reply }}</p>
                 @endforeach
             @endforeach
+        </div>
+        <div class='make_comment'>
+            <form action="/comments" method="POST">
+                @csrf
+                <h2>コメントする</h2>
+                <input type='hidden' name='comment[record_id]' value="{{ $record->id }}">
+                <textarea name="comment[comment]" placeholder="ここにコメントを入力"></textarea>
+                <input type="submit" value="store_comment"/>
+            </form>
         </div>
         <div class="footer">
             <a href="/">戻る</a>
@@ -73,6 +106,27 @@
         
                 if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
                     document.getElementById(`form_${id}`).submit();
+                }
+            }
+            
+            function deleteComment(id) {
+                'use strict'
+        
+                if (confirm('コメントは削除すると復元できません。\n本当に削除しますか？')) {
+                    document.getElementById(`form_${id}`).submit();
+                }
+            }
+
+            function editComment(id){
+                'use strict'
+                
+                var elements = document.getElementsByClassName(`comment_${id}`);
+                for (const element of elements) {
+                    if(element.style.display === "none"){
+                        element.style.display = "block";
+                    }else{
+                        element.style.display = "none";
+                    }
                 }
             }
         </script>
