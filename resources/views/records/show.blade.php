@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <x-app-layout>
-    <x-slot name="header">
-        <h1>棋譜投稿サイト</h1>
-    </x-slot>
+    <head>
+        <meta charset="utf-8">
+        <title>棋譜投稿サイト</title>
+    </head>
+    <body>
         <h1>投稿詳細</h1>
         <div class="edit"><a href="/records/{{ $record->id }}/edit">edit</a></div>
         <small>{{ $record->user->name }}</small>
@@ -12,19 +13,44 @@
                     @method('DELETE')
                     <button type="button" onclick="deletePost({{ $record->id }})">delete</button> 
                 </form>
-        <div class='records'>
-            <div class='record'>
-                <h2 class='title'>
-                    タイトル：{{ $record->title }}
-                </h2>
-                <p class='body'>先手：{{ $record->first_player_name }}</p>
-                <p class='body'>後手：{{ $record->second_player_name }}</p>
-                <p class='body'>先手の戦型：{{ $record->first_player_strategy }}</p>
-                <p class='body'>後手の戦型：{{ $record->second_player_strategy }}</p>
-                <p class='body'>先手の囲い：{{ $record->first_player_castle }}</p>
-                <p class='body'>後手の囲い：{{ $record->second_player_castle }}</p>
-                <p class='body'>備考：{{ $record->remark }}</p>
-            </div>
+        <div class='record'>
+            <h2 class='title'>
+                タイトル：
+                <a href="/records/{{ $record->id }}">{{ $record->title }}</a>
+            </h2>
+            <p class='players'>
+                @if($record->first_player_name === null)
+                    先手：匿名
+                @else
+                    先手：{{ $record->first_player_name }}
+                @endif
+                ‐
+                @if($record->second_player_name === null)
+                    後手：匿名
+                @else
+                    後手：{{ $record->second_player_name }}
+                @endif
+            </p>
+            <p class='strategies'>
+                @isset($record->first_player_strategy)
+                    ▲{{ $record->first_player_strategy }}
+                @endisset
+                @isset($record->second_player_strategy)
+                    △{{ $record->second_player_strategy }}
+                @endisset
+            </p>
+            <p class='castles'></p>
+                @isset($record->first_player_castle)
+                    ▲{{ $record->first_player_castle }}
+                @endisset
+                @isset($record->second_player_castle)
+                    △{{ $record->second_player_castle}}
+                @endisset
+            </p>
+            @isset($record->remark)
+                <p class='remark'>備考：{{ $record->remark }}</p>
+            @endisset
+            <p class='contributor'>投稿者：{{ $record->user->name }}</p>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/kifu-for-js@5/bundle/kifu-for-js.min.js" charset="utf-8"></script>
             <script type="text/kifu">
@@ -50,5 +76,5 @@
                 }
             }
         </script>
-    </x-app-layout>
+    </body>
 </html>

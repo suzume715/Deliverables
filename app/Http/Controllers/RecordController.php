@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Record;
 use Illuminate\Http\Request;
+use App\Http\Requests\RecordRequest;
 
 class RecordController extends Controller
 {
@@ -22,12 +23,18 @@ class RecordController extends Controller
         return view('records.create');
     }
     
-    public function store(Request $request, Record $record)
+    public function store(RecordRequest $request, Record $record)
     {
+        //$validated = $request->validate([
+        //    'kif' => 'required'
+        //]);
         $input = $request['record'];
         $input += ['user_id' => $request->user()->id];
         $input += ['record' => mb_convert_encoding(file_get_contents($request->file('kif')), "utf-8", "SJIS-win")];
         $record->fill($input)->save();
+        //$file = $request->file('kif');
+        //$fileName = $file->getClientOriginalExtension();
+        //var_dump($fileName);
         return redirect('/records/' . $record->id);
     }
     
@@ -36,7 +43,7 @@ class RecordController extends Controller
         return view('records.edit')->with(['record' => $record]);
     }
     
-    public function update(Request $request, Record $record)
+    public function update(RecordRequest $request, Record $record)
     {
         $input = $request['record'];
         $input += ['user_id' => $request->user()->id];
