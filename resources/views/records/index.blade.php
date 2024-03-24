@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <x-app-layout>
-    <x-slot name="header">
-        <h1>棋譜投稿サイト</h1>
-    </x-slot>
+    <head>
+        <meta charset="utf-8">
+        <title>棋譜投稿サイト</title>
+    </head>
+    <body>
         <h1>投稿一覧</h1>
         <div class='records'>
             @foreach($records as $record)
@@ -12,13 +13,39 @@
                         タイトル：
                         <a href="/records/{{ $record->id }}">{{ $record->title }}</a>
                     </h2>
-                    <p class='body'>先手：{{ $record->first_player_name }}</p>
-                    <p class='body'>後手：{{ $record->second_player_name }}</p>
-                    <p class='body'>先手の戦型：{{ $record->first_player_strategy }}</p>
-                    <p class='body'>後手の戦型：{{ $record->second_player_strategy }}</p>
-                    <p class='body'>先手の囲い：{{ $record->first_player_castle }}</p>
-                    <p class='body'>後手の囲い：{{ $record->second_player_castle }}</p>
-                    <p class='body'>備考：{{ $record->remark }}</p>
+                    <p class='players'>
+                        @if($record->first_player_name === null)
+                            先手：匿名
+                        @else
+                            先手：{{ $record->first_player_name }}
+                        @endif
+                        ‐
+                        @if($record->second_player_name === null)
+                            後手：匿名
+                        @else
+                            後手：{{ $record->second_player_name }}
+                        @endif
+                    </p>
+                    <p class='strategies'>
+                        @isset($record->first_player_strategy)
+                            ▲{{ $record->first_player_strategy }}
+                        @endisset
+                        @isset($record->second_player_strategy)
+                            △{{ $record->second_player_strategy }}
+                        @endisset
+                    </p>
+                    <p class='castles'></p>
+                        @isset($record->first_player_castle)
+                            ▲{{ $record->first_player_castle }}
+                        @endisset
+                        @isset($record->second_player_castle)
+                            △{{ $record->second_player_castle}}
+                        @endisset
+                    </p>
+                    @isset($record->remark)
+                        <p class='remark'>備考：{{ $record->remark }}</p>
+                    @endisset
+                    <p class='contributor'>投稿者：{{ $record->user->name }}</p>
                 </div>
                 <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
                     @csrf
@@ -42,5 +69,5 @@
                 }
             }
         </script>
-    </x-app-layout>
+    </body>
 </html>
