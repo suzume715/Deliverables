@@ -4,8 +4,14 @@
     <x-slot name="header">
         <h1>棋譜投稿サイト</h1>
     </x-slot>
-        <h1>投稿一覧</h1>
+        <h1>投稿詳細</h1>
+        <div class="edit"><a href="/records/{{ $record->id }}/edit">edit</a></div>
         <small>{{ $record->user->name }}</small>
+        <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="deletePost({{ $record->id }})">delete</button> 
+                </form>
         <div class='records'>
             <div class='record'>
                 <h2 class='title'>
@@ -24,8 +30,25 @@
             <script type="text/kifu">
                 {{ $record->record }}
             </script>
+        <div class="comment">
+            @foreach($record->comments as $comment)  
+                <p>{{ $comment->comment }}</p>
+                @foreach($comment->replies as $reply)
+                    <p>{{ $reply->reply }}</p>
+                @endforeach
+            @endforeach
+        </div>
         <div class="footer">
             <a href="/">戻る</a>
         </div>
+        <script>
+            function deletePost(id) {
+                'use strict'
+        
+                if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
+                    document.getElementById(`form_${id}`).submit();
+                }
+            }
+        </script>
     </x-app-layout>
 </html>

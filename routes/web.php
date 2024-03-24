@@ -38,6 +38,9 @@ Route::controller(RecordController::class)->middleware(['auth'])->group(function
     Route::get('/records/create', 'create')->name('create');
     Route::get('/records/{record}', 'show')->name('show');
     Route::post('/records', 'store')->name('store');
+    Route::get('/records/{record}/edit', 'edit')->name('edit');
+    Route::put('/records/{record}', 'update')->name('update');
+    Route::delete('/records/{record}', 'delete')->name('delete');
 });
 
 require __DIR__.'/auth.php';

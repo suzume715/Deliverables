@@ -20,6 +20,11 @@
                     <p class='body'>後手の囲い：{{ $record->second_player_castle }}</p>
                     <p class='body'>備考：{{ $record->remark }}</p>
                 </div>
+                <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="deletePost({{ $record->id }})">delete</button> 
+                </form>
             @endforeach    
         </div>
         <div class='paginate'>
@@ -28,5 +33,14 @@
         <div class='create'>
             <a href='records/create'>新規投稿</a>
         </div>
+        <script>
+            function deletePost(id) {
+                'use strict'
+        
+                if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
+                    document.getElementById(`form_${id}`).submit();
+                }
+            }
+        </script>
     </x-app-layout>
 </html>
