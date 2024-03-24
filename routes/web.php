@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,12 @@ Route::controller(RecordController::class)->middleware(['auth'])->group(function
     Route::get('/records/{record}/edit', 'edit')->name('edit');
     Route::put('/records/{record}', 'update')->name('update');
     Route::delete('/records/{record}', 'delete')->name('delete');
+});
+
+Route::controller(CommentController::class)->middleware(['auth'])->group(function(){
+    Route::post('/comments', 'store')->name('store_comment');
+    Route::put('/comments/{comment}', 'update')->name('update_comment');
+    Route::delete('/comments/{comment}', 'delete')->name('delete_comment');
 });
 
 require __DIR__.'/auth.php';

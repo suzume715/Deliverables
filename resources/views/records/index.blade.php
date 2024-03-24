@@ -46,6 +46,7 @@
                         <p class='remark'>備考：{{ $record->remark }}</p>
                     @endisset
                     <p class='contributor'>投稿者：{{ $record->user->name }}</p>
+                    <p class='number_of_comments'>コメント数：{{ count($record->comments) }}</p>
                 </div>
                 <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
                     @csrf

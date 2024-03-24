@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     
     public function user()   
     {
@@ -23,4 +25,10 @@ class Comment extends Model
     {
         return $this->hasMany(Reply::class);  
     }
+    
+    protected $fillable = [
+        'user_id',
+        'record_id',
+        'comment'
+    ];
 }
