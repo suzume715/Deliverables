@@ -1,11 +1,9 @@
-<!DOCTYPE HTML>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
+<x-app-layout>
+    <x-slot name="header">
         <meta charset="utf-8">
         <title>棋譜投稿サイト</title>
-    </head>
-    <body>
         <h1>新規投稿</h1>
+    </x-slot>
         <form action="/records" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="title">
@@ -59,5 +57,4 @@
         <div class="footer">
             <a href="/">戻る</a>
         </div>
-    </body>
-</html>
+</x-app-layout>

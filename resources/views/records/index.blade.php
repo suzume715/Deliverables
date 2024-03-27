@@ -1,11 +1,8 @@
-<!DOCTYPE HTML>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
+<x-app-layout>
+    <x-slot name="header">
         <title>棋譜投稿サイト</title>
-    </head>
-    <body>
         <h1>投稿一覧</h1>
+    </x-slot>
         <div class='records'>
             @foreach($records as $record)
                 <div class='record'>
@@ -70,5 +67,4 @@
                 }
             }
         </script>
-    </body>
-</html>
+</x-app-layout>
