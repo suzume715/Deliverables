@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ReplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,12 @@ Route::controller(CommentController::class)->middleware(['auth'])->group(functio
     Route::post('/comments', 'store')->name('store_comment');
     Route::put('/comments/{comment}', 'update')->name('update_comment');
     Route::delete('/comments/{comment}', 'delete')->name('delete_comment');
+});
+
+Route::controller(ReplyController::class)->middleware(['auth'])->group(function(){
+    Route::post('/replies', 'store')->name('store_reply');
+    Route::put('/replies/{reply}', 'update')->name('reply_comment');
+    Route::delete('/replies/{reply}', 'delete')->name('delete_reply');
 });
 
 require __DIR__.'/auth.php';

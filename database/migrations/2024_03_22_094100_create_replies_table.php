@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('comment_id')->constrained()->onDelete('cascade');
+            $table->foreignId('comment_id')->constrained();
             $table->string('reply',200);
             $table->timestamps();
             $table->softDeletes();
