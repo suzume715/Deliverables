@@ -17,6 +17,7 @@ class ReplyController extends Controller
     
     public function update(ReplyRequest $request, Reply $reply)
     {
+        $this->authorize('update', $reply);
         $input = $request['reply'];
         $input += ['user_id' => $request->user()->id];
         $reply->fill($input)->save();
@@ -25,6 +26,7 @@ class ReplyController extends Controller
     
     public function delete(Reply $reply)
     {
+        $this->authorize('delete', $reply);
         $reply->delete();
         return redirect('/records/' . $reply->comment->record_id);
     }

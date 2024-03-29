@@ -51,6 +51,7 @@
                 {{--<textarea name="record[record]" placeholder="棋譜"></textarea>--}}
                 <input type="file" name="kif">
                 <p class="file__error" style="color:red">{{ $errors->first('kif') }}</p>
+                {{--<p class="file__error" style="color:red">{{ $errors->first('record.record') }}</p>--}}
             </div>
             <input type="submit" value="store"/>
         </form>

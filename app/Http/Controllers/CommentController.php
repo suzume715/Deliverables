@@ -17,6 +17,7 @@ class CommentController extends Controller
     
     public function update(CommentRequest $request, Comment $comment)
     {
+        $this->authorize('update', $comment);
         $input = $request['comment'];
         $input += ['user_id' => $request->user()->id];
         $comment->fill($input)->save();
@@ -25,6 +26,7 @@ class CommentController extends Controller
     
     public function delete(Comment $comment)
     {
+        $this->authorize('delete', $comment);
         $comment->delete();
         return redirect('/records/' . $comment->record_id);
     }
