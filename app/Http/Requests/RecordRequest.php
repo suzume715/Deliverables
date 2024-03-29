@@ -33,7 +33,7 @@ class RecordRequest extends FormRequest
             'record.second_player_castle' => 'nullable|string|max:20',
             'record.remark' => 'nullable|string|max:200',
             'record.record' => 'string',
-            'kif' => 'required|mimes:txt|max:512'
+            'kif' => 'mimes:txt|max:512'
         ];
     }
 }

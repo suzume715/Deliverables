@@ -17,9 +17,17 @@ class CommentSeeder extends Seeder
     public function run()
     {
         DB::table('comments')->insert([
-            'user_id' => 1,
+            'user_id' => 2,
             'record_id' => 1,
-            'comment' => '45手目に角交換はどうでしょう',
+            'comment' => '結果的には6九角が悪手でしたか',
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime(),
+        ]);
+        
+        DB::table('comments')->insert([
+            'user_id' => 4,
+            'record_id' => 1,
+            'comment' => 'やはり同じAI同士では先手必勝なのでしょうか',
             'created_at' => new DateTime(),
             'updated_at' => new DateTime(),
         ]);
