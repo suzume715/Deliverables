@@ -29,10 +29,6 @@ class RecordController extends Controller
                 ->orderBy('updated_at', 'DESC');
             }
             
-        //dd($query);
-            
-        //$record = $query->getPaginateByLimit();
-        
         return view('records.index')->with(['records' => $record->paginate(5), 'keyword' => $request->keyword]);
     }
     
