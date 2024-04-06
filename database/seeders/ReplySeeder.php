@@ -27,8 +27,7 @@ class ReplySeeder extends Seeder
         DB::table('replies')->insert([
             'user_id' => 1,
             'comment_id' => 1,
-            'reply' => '6八角打の方が良かったようです。
-            同金、同飛成、7七角打、5九龍、同角と進みます。',
+            'reply' => '6八角打の方が良かったようです。同金、同飛成、7七角打、5九龍、同角と進みます。',
             'created_at' => new DateTime(),
             'updated_at' => new DateTime(),
         ]);

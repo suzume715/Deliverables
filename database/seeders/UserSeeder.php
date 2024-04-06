@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
         ]);
         
         DB::table('users')->insert([
-            'name' => 'ユーザー2名前を長めにしたらどうなるかを確認してみている',
+            'name' => 'ユーザー2',
             'email' => 'user2@sample.com',
             'password' => Hash::make('user2passuser2word'),
         ]);
         
         DB::table('users')->insert([
-            'name' => 'ユーザー3名前を長めにしたらどうなるかを確認してみている',
+            'name' => 'ユーザー3',
             'email' => 'user3@sample.com',
             'password' => Hash::make('user3passuser3word'),
         ]);

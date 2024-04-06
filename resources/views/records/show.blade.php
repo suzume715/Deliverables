@@ -4,62 +4,33 @@
         <title>棋譜投稿サイト</title>
         <h1>投稿詳細</h1>
     </x-slot>
-        
-        <div class="flex justify-between">
-            <div class="pl-3 pt-3">
-                <p class="text-sm">
-                    投稿者：{{ $record->user->name }}
-                </p>
-            </div>
-            
-            <div id="menu">
-                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
-                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
-                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
-            </div>
-            
-            <div id="list" style="position:absolute; background-color: white; display: none; right: 0;">
-                <div id="close" style="left: 100%; transform: translateX(-100%);" class="relative w-7 h-7 border-2
-                before:content-[''] before:absolute before:w-1 before:h-7 before:bg-black before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45
-                after:content-[''] after:absolute after:w-1 after:h-7 after:bg-black after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45"></div>
-                @can('edit', $record)
-                    <a href="/records/{{ $record->id }}/edit" class="p-3">
-                        投稿を編集する
-                    </a>
-                @endcan
-                @can('delete', $record)
-                    <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" onclick="deletePost({{ $record->id }})" class="p-3">
-                            投稿を削除する
-                        </button>
-                    </form>
-                @endcan
-            </div>
+    
+        <div id="title_menu" onmouseover="show(this)" onmouseleave="hide(this)" style="position:absolute; background-color: white; display: none; right: 0;" class="mr-3">
+            @can('edit', $record)
+                <a href="/records/{{ $record->id }}/edit" style="display: block;" class="pt-2 px-3 pb-1">
+                    投稿を編集する
+                </a>
+            @endcan
+            @can('delete', $record)
+                <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="deletePost({{ $record->id }})" class="pt-1 px-3 pb-2">
+                        投稿を削除する
+                    </button>
+                </form>
+            @endcan
         </div>
-        
-        <script>
-            let menu = document.getElementById("menu");
-            let list = document.getElementById("list");
- 
-            menu.addEventListener('click', function () {
-                menu.style.display = "none";
-                list.style.display = "block";
-            });
-            
-            let close = document.getElementById("close");
-            close.addEventListener('click', function () {
-                menu.style.display = "block";
-                list.style.display = "none";
-            });
-        </script>
-        
-        <h2 class="pl-3 pt-3 text-3xl">
+    
+        <h2 id="title" onmouseover="show(title_menu)" onmouseleave="hide(title_menu)" class="pl-3 pt-3 text-3xl border-2">
             {{ $record->title }}
         </h2>
         
-        <p class="text-2xl pl-3 my-1">
+        <p class="pl-3 text-sm border-2">
+            投稿者：{{ $record->user->name }}
+        </p>
+        
+        <p class="text-2xl pl-3 py-1 border-2">
             @if($record->first_player_name === null)
                 先手：匿名
             @else
@@ -73,7 +44,7 @@
             @endif
         </p>
     
-        <p class="pl-7 py-1">
+        <p class="pl-7 py-1 border-2">
             @isset($record->first_player_strategy)
                 ▲{{ $record->first_player_strategy }}
             @endisset
@@ -90,13 +61,13 @@
         
         
         @isset($record->remark)
-            <p class="pl-7 py-1">
+            <p class="pl-7 py-1 border-2">
                 備考：{{ $record->remark }}
             </p>
         @endisset
             
         <script src="https://cdn.jsdelivr.net/npm/kifu-for-js@5/bundle/kifu-for-js.min.js" charset="utf-8"></script>
-            <div class="ml-14 my-1">
+            <div class="ml-14 my-1 border-2">
                 <script type="text/kifu">
                     {{ $record->record }}
                 </script>
@@ -104,111 +75,104 @@
             
         <div class="m-1 border-2 border-blue-400">
             @foreach($record->comments as $comment)
-                <div class="flex">
-                    <div id="view_comment_{{ $comment->id }}" style="display: block;" class="w-full pl-3">
-                        <p class="text-blue-500 text-sm">{{ $comment->user->name }}</p>
-                        <p>{{ $comment->comment }}</p>
-                    </div>
-                    <div id="edit_comment_{{ $comment->id }}" style="display: none;" class="w-full pl-3">
-                        <form action="/comments/{{ $comment->id }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type='hidden' name='comment[record_id]' value="{{ $record->id }}">
-                            <textarea type="text" name="comment[comment]" class="w-full">{{ old('comment.comment', $comment->comment) }}</textarea><br>
-                            <p class="comment__error" style="color:red">{{ $errors->first('comment.comment') }}</p>
-                            <div class="flex justify-end">
-                                <input type="submit" value="保存"/ class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1">
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <div class="w-24 pt-2 flex justify-center">
-                        <button id="reply_button_{{ $comment->id }}" type="button" onclick="Reply({{ $comment->id }})" class="h-8 px-2 py-1 text-yellow-500 border border-yellow-500 font-semibold rounded hover:bg-yellow-100">
-                            返信
+                <div id="comment_menu_{{ $comment->id }}" onmouseover="show(this)" onmouseleave="hide(this)" style="position:absolute; background-color: white; display: none; right: 0;" class="mr-3">
+                    <div class="flex">
+                        <button onclick="Reply({{ $comment->id }})" class="px-3 py-1">
+                            返信する
                         </button>
-                    </div>
-                    
-                    @can('update', $comment)
-                        <div class="w-24 pt-2 flex justify-center">
-                            <button id="comment_mode_button_{{ $comment->id }}" type="button" onclick="Comment_mode({{ $comment->id }})" class="h-8 px-2 py-1 text-blue-500 border border-blue-500 font-semibold rounded hover:bg-blue-100">
-                                編集
+                        @can('update', $comment)
+                            <button onclick="edit_comment({{ $comment->id }})" class="px-3 py-1">
+                                編集する
                             </button>
-                        </div>
-                    @endcan
-                    
-                    @can('delete', $comment)
-                        <div class="w-24 pt-2 flex justify-center">
+                        @endcan
+                        @can('delete', $comment)
                             <form action="/comments/{{ $comment->id }}" id="form_{{ $comment->id }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" onclick="deleteComment({{ $comment->id }})" class="h-8 px-2 py-1 text-red-500 border border-red-500 font-semibold rounded hover:bg-red-100">
-                                    削除
+                                <button type="button" onclick="deleteComment({{ $comment->id }})" class="px-3 py-1">
+                                    削除する
                                 </button> 
                             </form>
-                        </div>
-                    @endcan
+                        @endcan
+                    </div>
+                </div>
+            
+                <div id="view_comment_{{ $comment->id }}" style="display: block;" onmouseover="show(comment_menu_{{ $comment->id }})" onmouseleave="hide(comment_menu_{{ $comment->id }})" class="pl-3">
+                    <p class="text-blue-500 text-sm">{{ $comment->user->name }}</p>
+                    <p>{{ $comment->comment }}</p>
+                </div>
+                
+                <div id="edit_comment_{{ $comment->id }}" style="display: none;" class="px-3">
+                    <form action="/comments/{{ $comment->id }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type='hidden' name='comment[record_id]' value="{{ $record->id }}">
+                        <textarea type="text" name="comment[comment]" class="w-full">{{ old('comment.comment', $comment->comment) }}</textarea><br>
+                        <p class="comment__error" style="color:red">{{ $errors->first('comment.comment') }}</p>
+                        <input type="submit" value="保存"/ class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1">
+                        <button type="button" onclick="cancel_edit_comment({{ $comment->id }})" class="px-3 py-1">
+                            キャンセル
+                        </button>
+                    </form>
                 </div>
                 
                 @foreach($comment->replies as $reply)
-                    <div class="flex">
-                        <div id="view_reply_{{ $reply->id }}" style="display: block;" class="w-full pl-3">
-                            <p class="text-blue-500 pl-6 text-sm">{{ $reply->user->name }}</p>
-                            <p class="pl-6">{{ $reply->reply }}</p>
-                        </div>
-                        
-                        <div id="edit_reply_{{ $reply->id }}" style="display: none;" class="w-full pl-3">
-                            <form action="/replies/{{ $reply->id }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <input type='hidden' name='reply[comment_id]' value="{{ $comment->id }}">
-                                <textarea type="text" name="reply[reply]" class="w-full ml-6">{{ old('reply.reply', $reply->reply) }}</textarea><br>
-                                <p class="reply__error" style="color:red">{{ $errors->first('reply.reply') }}</p>
-                                <div class="flex justify-end">
-                                    <input type="submit" value="保存"/ class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1">
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <div class="w-24 pt-2 flex justify-center">
-                        </div>
-                        
-                        @can('update', $reply)
-                            <div class="w-24 pt-2 flex justify-center">
-                                <button id="reply_mode_button_{{ $reply->id }}" type="button" onclick="Reply_mode({{ $reply->id }})" class="h-8 px-2 py-1 text-blue-500 border border-blue-500 font-semibold rounded hover:bg-blue-100">
-                                    編集
+                    <div id="reply_menu_{{ $reply->id }}" onmouseover="show(this)" onmouseleave="hide(this)" style="position:absolute; background-color: white; display: none; right: 0;" class="mr-3">
+                        <div class="flex">
+                            @can('update', $reply)
+                                <button type="button" onclick="editReply({{ $reply->id }})" class="px-3 py-1">
+                                    編集する
                                 </button>
-                            </div
-                        @endcan
-                        @can('delete', $reply)
-                            <div class="w-24 pt-2 flex justify-center">
+                            @endcan
+                            @can('delete', $reply)
                                 <form action="/replies/{{ $reply->id }}" id="form_{{ $reply->id }}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" onclick="deleteReply({{ $reply->id }})" class="h-8 px-2 py-1 text-red-500 border border-red-500 font-semibold rounded hover:bg-red-100">
-                                        削除
+                                    <button type="button" onclick="deleteReply({{ $reply->id }})" class="px-3 py-1">
+                                        削除する
                                     </button> 
                                 </form>
-                            </div>
-                        @endcan
+                            @endcan
+                        </div>
+                    </div>
+                    
+                    <div id="view_reply_{{ $reply->id }}" style="display: block;" onmouseover="show(reply_menu_{{ $reply->id }})" onmouseleave="hide(reply_menu_{{ $reply->id }})" class="w-full pl-3">
+                        <p class="text-blue-500 pl-6 text-sm">{{ $reply->user->name }}</p>
+                        <p class="pl-6">{!!nl2br(e($reply->reply))!!}</p>
+                    </div>
+                        
+                    <div id="edit_reply_{{ $reply->id }}" style="display: none;" class="w-full pl-6 pr-3">
+                        <form action="/replies/{{ $reply->id }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input type='hidden' name='reply[comment_id]' value="{{ $comment->id }}">
+                            <textarea type="text" name="reply[reply]" class="w-full">{{ old('reply.reply', $reply->reply) }}</textarea><br>
+                            <p class="reply__error" style="color:red">{{ $errors->first('reply.reply') }}</p>
+                            <input type="submit" value="保存"/ class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1">
+                            <button type="button" onclick="cancel_edit_reply({{ $reply->id }})" class="px-3 py-1">
+                                キャンセル
+                            </button>
+                        </form>
                     </div>
                 @endforeach
                 
-                <div class="flex">
-                    <div id="reply_{{ $comment->id }}" style="display: none;" class="w-full m-3 pr-6">
-                        <form action="/replies" method="POST">
-                            @csrf
-                            <input type='hidden' name='reply[comment_id]' value="{{ $comment->id }}">
-                            <textarea name="reply[reply]" placeholder="ここに返信を入力" class="w-full"></textarea>
-                            <p class="reply__error" style="color:red">{{ $errors->first('reply.reply') }}</p>
-                            <div class="flex justify-end">
-                                <input type="submit" value="保存" class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1"/>
-                            </div>
-                        </form>
-                    </div>
+                
+                <div id="reply_{{ $comment->id }}" style="display: none;" class="w-full pl-9 py-3 pr-3">
+                    <form action="/replies" method="POST">
+                        @csrf
+                        <input type='hidden' name='reply[comment_id]' value="{{ $comment->id }}">
+                        <textarea name="reply[reply]" placeholder="ここに返信を入力" class="w-full"></textarea>
+                        <p class="reply__error" style="color:red">{{ $errors->first('reply.reply') }}</p>
+                        <input type="submit" value="保存" class="bg-gray-900 hover:bg-gray-900 text-white rounded px-1 py-1"/>
+                        <button type="button" onclick="cancel_reply({{ $comment->id }})" class="px-3 py-1">
+                            キャンセル
+                        </button>
+                    </form>
                 </div>
             @endforeach
         </div>
-        <div class="w-full m-3 pr-6">
+        
+        <div class="w-full p-3 border-2">
             <form action="/comments" method="POST">
                 @csrf
                 <input type='hidden' name='comment[record_id]' value="{{ $record->id }}">
@@ -225,6 +189,7 @@
                 <a href="/" class="px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">戻る</a>
             </div>
         </div>
+        
         <script>
             function deletePost(id) {
                 'use strict'
@@ -249,42 +214,50 @@
                     document.getElementById(`form_${id}`).submit();
                 }
             }
-
-            function Comment_mode(id){
+            
+            function edit_comment(id){
                 'use strict'
-                if(document.getElementById(`view_comment_${id}`).style.display === "block"){
-                    document.getElementById(`view_comment_${id}`).style.display = "none";
-                    document.getElementById(`edit_comment_${id}`).style.display = "block";
-                    document.getElementById(`comment_mode_button_${id}`).textContent = "戻る";
-                }else{
-                    document.getElementById(`view_comment_${id}`).style.display = "block";
-                    document.getElementById(`edit_comment_${id}`).style.display = "none";
-                    document.getElementById(`comment_mode_button_${id}`).textContent = "編集";
-                }
+                document.getElementById(`view_comment_${id}`).style.display = "none";
+                document.getElementById(`edit_comment_${id}`).style.display = "block";
+                document.getElementById(`comment_menu_${id}`).style.display = "none";
+            }
+            
+            function cancel_edit_comment(id){
+                'use strict'
+                document.getElementById(`view_comment_${id}`).style.display = "block";
+                document.getElementById(`edit_comment_${id}`).style.display = "none";
+            }
+            
+            function cancel_reply(id){
+                'use strict'
+                document.getElementById(`reply_${id}`).style.display = "none";
             }
             
             function Reply(id){
                 'use strict'
-                if(document.getElementById(`reply_${id}`).style.display === "none"){
-                    document.getElementById(`reply_${id}`).style.display = "block";
-                    document.getElementById(`reply_button_${id}`).textContent = "戻る";
-                }else{
-                    document.getElementById(`reply_${id}`).style.display = "none";
-                    document.getElementById(`reply_button_${id}`).textContent = "返信";
-                }
+                document.getElementById(`reply_${id}`).style.display = "block";
+                document.getElementById(`comment_menu_${id}`).style.display = "none";
             }
             
-            function Reply_mode(id){
+            function editReply(id){
                 'use strict'
-                if(document.getElementById(`view_reply_${id}`).style.display === "block"){
-                    document.getElementById(`view_reply_${id}`).style.display = "none";
-                    document.getElementById(`edit_reply_${id}`).style.display = "block";
-                    document.getElementById(`reply_mode_button_${id}`).textContent = "戻る";
-                }else{
-                    document.getElementById(`view_reply_${id}`).style.display = "block";
-                    document.getElementById(`edit_reply_${id}`).style.display = "none";
-                    document.getElementById(`reply_mode_button_${id}`).textContent = "編集";
-                }
+                document.getElementById(`view_reply_${id}`).style.display = "none";
+                document.getElementById(`edit_reply_${id}`).style.display = "block";
+                document.getElementById(`reply_menu_${id}`).style.display = "none";
+            }
+            
+            function cancel_edit_reply(id){
+                'use strict'
+                document.getElementById(`view_reply_${id}`).style.display = "block";
+                document.getElementById(`edit_reply_${id}`).style.display = "none";
+            }
+            
+            function show(x) {
+                x.style.display = "block";
+            }
+        
+            function hide(x) {
+                x.style.display = "none";
             }
         </script>
 </x-app-layout>
