@@ -5,36 +5,59 @@
         <h1>投稿詳細</h1>
     </x-slot>
         
-        <div class="flex">
-            <div class="w-full pl-3 pt-3">
+        <div class="flex justify-between">
+            <div class="pl-3 pt-3">
                 <p class="text-sm">
                     投稿者：{{ $record->user->name }}
                 </p>
-                <h2 class="text-3xl">
-                    {{ $record->title }}
-                </h2>
             </div>
             
-            @can('edit', $record)
-                <div class="w-20 pt-3 flex justify-center">
-                    <a href="/records/{{ $record->id }}/edit" class="h-8 px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">
-                        編集
-                    </a>
-                </div>
-            @endcan
+            <div id="menu">
+                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
+                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
+                <div style="margin: 5px; width: 20px; height: 2px; background-color: black;"></div>
+            </div>
             
-            @can('delete', $record)
-                <div class="w-20 pt-3 flex justify-center">
+            <div id="list" style="position:absolute; background-color: white; display: none; right: 0;">
+                <div id="close" style="left: 100%; transform: translateX(-100%);" class="relative w-7 h-7 border-2
+                before:content-[''] before:absolute before:w-1 before:h-7 before:bg-black before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:rotate-45
+                after:content-[''] after:absolute after:w-1 after:h-7 after:bg-black after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:-rotate-45"></div>
+                @can('edit', $record)
+                    <a href="/records/{{ $record->id }}/edit" class="p-3">
+                        投稿を編集する
+                    </a>
+                @endcan
+                @can('delete', $record)
                     <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
                         @csrf
                         @method('DELETE')
-                        <button type="button" onclick="deletePost({{ $record->id }})" class="px-2 py-1 bg-red-400 text-white font-semibold rounded hover:bg-red-500">
-                            削除
-                        </button> 
+                        <button type="button" onclick="deletePost({{ $record->id }})" class="p-3">
+                            投稿を削除する
+                        </button>
                     </form>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </div>
+        
+        <script>
+            let menu = document.getElementById("menu");
+            let list = document.getElementById("list");
+ 
+            menu.addEventListener('click', function () {
+                menu.style.display = "none";
+                list.style.display = "block";
+            });
+            
+            let close = document.getElementById("close");
+            close.addEventListener('click', function () {
+                menu.style.display = "block";
+                list.style.display = "none";
+            });
+        </script>
+        
+        <h2 class="pl-3 pt-3 text-3xl">
+            {{ $record->title }}
+        </h2>
         
         <p class="text-2xl pl-3 my-1">
             @if($record->first_player_name === null)
