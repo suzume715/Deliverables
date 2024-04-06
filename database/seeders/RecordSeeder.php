@@ -1092,7 +1092,7 @@ class RecordSeeder extends Seeder
         
         DB::table('records')->insert([
             'user_id' => 3,
-            'title' => 'ぴよ将棋レベル5同士対局、タイトルを長めにしてみたらどうなるか確認してみる',
+            'title' => 'ぴよ将棋レベル5同士対局',
             'first_player_name' => 'Lv5 ひより(R150)',
             'second_player_name' => 'Lv5 ひより(R150)',
             'remark' => '5分+5秒ルールでの対局',
@@ -1449,7 +1449,7 @@ class RecordSeeder extends Seeder
         
         DB::table('records')->insert([
             'user_id' => 4,
-            'title' => 'ぴよ将棋レベル10同士対局、タイトルを長めにしてみたらどうなるか確認してみる',
+            'title' => 'ぴよ将棋レベル10同士対局',
             'first_player_name' => 'Lv10 ピヨ太(R450)',
             'second_player_name' => 'Lv10 ピヨ太(R450)',
             'remark' => '5分+5秒ルールでの対局',

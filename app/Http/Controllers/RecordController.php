@@ -25,11 +25,10 @@ class RecordController extends Controller
                 ->orwhere('first_player_strategy', "LIKE", "%$keyword%")
                 ->orwhere('second_player_strategy', "LIKE", "%$keyword%")
                 ->orwhere('first_player_castle', "LIKE", "%$keyword%")
-                ->orwhere('second_player_castle', "LIKE", "%$keyword%")
-                ->orderBy('updated_at', 'DESC');
+                ->orwhere('second_player_castle', "LIKE", "%$keyword%");
             }
             
-        return view('records.index')->with(['records' => $record->paginate(5), 'keyword' => $request->keyword]);
+        return view('records.index')->with(['records' => $record->orderBy('updated_at', 'DESC')->paginate(5), 'keyword' => $request->keyword]);
     }
     
     public function show(Record $record)
@@ -46,14 +45,14 @@ class RecordController extends Controller
     {
         $validated = $request->validate([
             'kif' => 'required'
+        ],
+        [
+            'kif.required' => 'kifファイルは必須です。',
         ]);
         $input = $request['record'];
         $input += ['user_id' => $request->user()->id];
         $input += ['record' => mb_convert_encoding(file_get_contents($request->file('kif')), "utf-8", "SJIS-win")];
         $record->fill($input)->save();
-        //$file = $request->file('kif');
-        //$fileName = $file->getClientOriginalExtension();
-        //var_dump($fileName);
         return redirect('/records/' . $record->id);
     }
     
