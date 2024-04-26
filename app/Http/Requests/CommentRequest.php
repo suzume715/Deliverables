@@ -27,4 +27,11 @@ class CommentRequest extends FormRequest
             'comment.comment' => 'required|string|max:200'
         ];
     }
+    
+    public function attributes()
+    {
+        return [
+            'comment.comment' => 'コメント'
+        ];
+    }
 }

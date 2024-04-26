@@ -37,7 +37,7 @@ class RecordRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $extension = $value->getClientOriginalExtension();
                     if ($extension !== "kif") {
-                        $fail('.kifである必要があります');
+                        $fail('アップロード可能な拡張子は .kif です。');
                     }
                 },'max:512'
         ];

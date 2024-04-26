@@ -28,5 +28,12 @@ class ReplyRequest extends FormRequest
         ];
     }
     
+    public function attributes()
+    {
+        return [
+            'reply.reply' => '返信'
+        ];
+    }
+    
     
 }
