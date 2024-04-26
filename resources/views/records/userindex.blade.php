@@ -106,18 +106,26 @@
                 </p>
             
                 <p class="pl-9">
+                    <span class="inline-block">
                     @isset($record->first_player_strategy)
                         ▲{{ $record->first_player_strategy }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->second_player_strategy)
                         △{{ $record->second_player_strategy }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->first_player_castle)
                         ▲{{ $record->first_player_castle }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->second_player_castle)
                         △{{ $record->second_player_castle}}
                     @endisset
+                    </span>
                 </p>
                 
                 <p class="text-sm pl-9 py-1">コメント数：{{ count($record->comments) }}</p>

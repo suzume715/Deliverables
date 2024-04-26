@@ -14,7 +14,7 @@
         <div class="mx-auto my-1 max-w-[400px] w-full relative">
             <form action="/" method="GET">
                 @csrf
-                <input type="text" name="keyword" value="{{ $keyword }}" style="width: calc( 100% - 24px );" class="h-[33px]">
+                <input type="text" name="keyword" value="{{ $keyword }}" style="width: calc( 100% - 48px );" class="h-[33px]">
                 <button type="submit" class="absolute top-0 py-1 px-3 bg-[#0636C5]">
                     <svg class="inline-block h-6 w-6 text-slate-100"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="10" cy="10" r="7" />  <line x1="21" y1="21" x2="15" y2="15" /></svg>
                 </button>
@@ -23,7 +23,6 @@
         
         @foreach($records as $record)
             <div onmouseover="show('menu_button_{{ $record->id }}')" onmouseleave="hide('menu_button_{{ $record->id }}')"
-                {{--onclick="location.href='/'"--}}
                 class="m-1 border-2 border-black relative">
                 
                     <div class="w-full pl-3">
@@ -124,18 +123,26 @@
                 </p>
             
                 <p class="pl-9">
+                    <span class="inline-block">
                     @isset($record->first_player_strategy)
                         ▲{{ $record->first_player_strategy }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->second_player_strategy)
                         △{{ $record->second_player_strategy }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->first_player_castle)
                         ▲{{ $record->first_player_castle }}
                     @endisset
+                    </span>
+                    <span class="inline-block">
                     @isset($record->second_player_castle)
                         △{{ $record->second_player_castle}}
                     @endisset
+                    </span>
                 </p>
                 
                 <p class="text-sm pl-9 py-1">コメント数：{{ count($record->comments) }}</p>
