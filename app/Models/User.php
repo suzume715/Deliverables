@@ -56,4 +56,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reply::class);  
     }
+    
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+    
+    public function bookmark_records()
+    {
+        return $this->belongsToMany(Record::class, 'bookmarks', 'user_id', 'record_id');
+    }
+    
+    public function is_bookmark($recordId)
+    {
+        return $this->bookmarks()->where('record_id', $recordId)->exists();
+    }
 }

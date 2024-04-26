@@ -16,7 +16,6 @@ class RecordController extends Controller
     public function index(Request $request, Record $record)
     {
         $keyword = $request->input('keyword');
-        //$query = Record::query();
         
         if (isset($request->keyword)) {
             $record=Record::where('title', "LIKE", "%$keyword%")
@@ -79,5 +78,22 @@ class RecordController extends Controller
         $this->authorize('delete', $record);
         $record->delete();
         return redirect('/');
+    }
+    
+    public function userindex(Request $request)
+    {
+        $records=Record::where('user_id', $request->user()->id);
+            
+        return view('records.userindex')->with(['records' => $records->orderBy('updated_at', 'DESC')->paginate(5)]);
+    }
+    
+    public function bookmark_records()
+    {
+        $records = \Auth::user()->bookmark_records()->orderBy('created_at', 'desc')->paginate(5);
+        /*$data = [
+            'records' => $records,
+        ];
+        return view('records.bookmarks', $data);*/
+        return view('records.userindex')->with(['records' => $records]);
     }
 }

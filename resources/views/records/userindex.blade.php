@@ -1,24 +1,6 @@
 <x-app-layout>
-    {{--<x-slot name="header">
-        <title>棋譜投稿サイト</title>
-        <h1>投稿一覧</h1>
-    </x-slot>--}}
-        {{--<div class="m-3 w-20 px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">
-            <a href='records/create'>新規投稿</a>
-        </div>--}}
-        
         <div id="menu_cover" onclick="hideMenu()"
             class="fixed w-full h-full bg-gray-500 left-0 top-0 z-20 opacity-40 hidden">
-        </div>
-        
-        <div class="mx-auto my-1 max-w-[400px] w-full relative">
-            <form action="/" method="GET">
-                @csrf
-                <input type="text" name="keyword" value="{{ $keyword }}" style="width: calc( 100% - 24px );" class="h-[33px]">
-                <button type="submit" class="absolute top-0 py-1 px-3 bg-[#0636C5]">
-                    <svg class="inline-block h-6 w-6 text-slate-100"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="10" cy="10" r="7" />  <line x1="21" y1="21" x2="15" y2="15" /></svg>
-                </button>
-            </form>
         </div>
         
         @foreach($records as $record)
@@ -31,7 +13,7 @@
                             {{ $record->title }}
                         </a>
                     </div>
-                    
+                
                     <button id="menu_button_{{ $record->id }}" onmouseover="show('menu_button_{{ $record->id }}')" class="absolute hidden z-10 right-1 top-1" onclick="showMenu({{ $record->id }})">
                         <svg class="h-6 w-6 text-slate-900"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
                             <circle cx="12" cy="12" r="1" />
