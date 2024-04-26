@@ -49,4 +49,8 @@
             </x-primary-button>
         </div>
     </form>
+    
+    <div class="flex items-center justify-end mt-4">
+        <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
+    </div>
 </x-guest-layout>

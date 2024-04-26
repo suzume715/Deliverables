@@ -44,4 +44,9 @@
             </x-primary-button>
         </div>
     </form>
+    
+    <div class="flex items-center justify-end mt-4">
+        <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
+    </div>
+    
 </x-guest-layout>

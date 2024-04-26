@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\BookmarkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,8 @@ Route::controller(RecordController::class)->middleware(['auth'])->group(function
     Route::get('/records/{record}/edit', 'edit')->name('edit');
     Route::put('/records/{record}', 'update')->name('update');
     Route::delete('/records/{record}', 'delete')->name('delete');
+    Route::get('/userpage', 'userindex')->name('userindex');
+    Route::get('/bookmarks', 'bookmark_records')->name('bookmarks');
 });
 
 Route::controller(CommentController::class)->middleware(['auth'])->group(function(){
@@ -56,6 +59,11 @@ Route::controller(ReplyController::class)->middleware(['auth'])->group(function(
     Route::post('/replies', 'store')->name('store_reply');
     Route::put('/replies/{reply}', 'update')->name('reply_comment');
     Route::delete('/replies/{reply}', 'delete')->name('delete_reply');
+});
+
+Route::controller(BookmarkController::class)->middleware(['auth'])->group(function(){
+    Route::post('/records/{record}/bookmark', 'store')->name('bookmark.store');
+    Route::delete('/records/{record}/unbookmark', 'destroy')->name('bookmark.destroy');
 });
 
 require __DIR__.'/auth.php';

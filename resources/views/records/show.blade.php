@@ -22,8 +22,7 @@
             class="pl-3 pt-3 text-3xl">
             {{ $record->title }}
         </h2>
-        
-        @can('edit', $record)
+    
         <button id="title_menu_button" onmouseover="show('title_menu_button')" class="absolute hidden z-10 right-1 top-1" onclick="showTitleMenu()">
             <svg class="h-6 w-6 text-slate-900"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
                 <circle cx="12" cy="12" r="1" />
@@ -31,10 +30,26 @@
                 <circle cx="12" cy="19" r="1" />
             </svg>
         </button>
-        @endcan
         
         <div id=title_menu class="absolute z-30 right-3 top-1 bg-white hidden border rounded border-black">
-            @can('edit', $record)
+            @if (!Auth::user()->is_bookmark($record->id))
+            <form action="{{ route('bookmark.store', $record) }}" method="post">
+                @csrf
+                <button onmouseover="selected(this)" onmouseleave="unselected(this)" class="block my-1 py-1 px-3">
+                    お気に入り登録
+                </button>
+            </form>
+            @else
+            <form action="{{ route('bookmark.destroy', $record) }}" method="post">
+                @csrf
+                @method('delete')
+                <button onmouseover="selected(this)" onmouseleave="unselected(this)" class="block my-1 py-1 px-3">
+                    お気に入り解除
+                </button>
+            </form>
+            @endif
+            @can('update', $record)
+                <hr class="h-px bg-gray-300 border-0">
                 <a href="/records/{{ $record->id }}/edit" onmouseover="selected(this)" onmouseleave="unselected(this)" class="block mt-1 py-1 px-3">
                     投稿を編集する
                 </a>
@@ -52,7 +67,7 @@
     </div>
         
     <script src="https://cdn.jsdelivr.net/npm/kifu-for-js@5/bundle/kifu-for-js.min.js" charset="utf-8"></script>
-        <div class="mx-auto my-1 w-[400px]">
+        <div class="mx-auto my-1 w-full max-w-[400px]">
             <script type="text/kifu">
                 {{ $record->record }}
             </script>
@@ -120,18 +135,26 @@
         </p>
     
         <p class="pl-3">
+            <span class="inline-block">
             @isset($record->first_player_strategy)
                 ▲{{ $record->first_player_strategy }}
             @endisset
+            </span>
+            <span class="inline-block">
             @isset($record->second_player_strategy)
                 △{{ $record->second_player_strategy }}
             @endisset
+            </span>
+            <span class="inline-block">
             @isset($record->first_player_castle)
                 ▲{{ $record->first_player_castle }}
             @endisset
+            </span>
+            <span class="inline-block">
             @isset($record->second_player_castle)
                 △{{ $record->second_player_castle}}
             @endisset
+            </span>
         </p>
     
         @isset($record->remark)
