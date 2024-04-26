@@ -1,60 +1,114 @@
 <x-app-layout>
-    <x-slot name="header">
+    {{--<x-slot name="header">
         <title>棋譜投稿サイト</title>
         <h1>投稿一覧</h1>
-    </x-slot>
-        <div class="m-3 w-20 px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">
+    </x-slot>--}}
+        {{--<div class="m-3 w-20 px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">
             <a href='records/create'>新規投稿</a>
+        </div>--}}
+        
+        <div id="menu_cover" onclick="hideMenu()"
+            class="fixed w-full h-full bg-gray-500 left-0 top-0 z-20 opacity-40 hidden">
         </div>
         
-        <div>
+        <div class="mx-auto my-1 w-[400px] relative">
             <form action="/" method="GET">
                 @csrf
-                <input type="text" name="keyword" value="{{ $keyword }}">
-                <input type="submit" value="検索">
+                <input type="text" name="keyword" value="{{ $keyword }}" class="w-[376px] h-[33px]">
+                <button type="submit" class="absolute top-0 py-1 px-3 bg-[#0636C5]">
+                    <svg class="inline-block h-6 w-6 text-slate-100"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="10" cy="10" r="7" />  <line x1="21" y1="21" x2="15" y2="15" /></svg>
+                </button>
             </form>
         </div>
         
         @foreach($records as $record)
-            <div class="m-1 border-2 border-red-700">
-                <div class="flex">
+            <div onmouseover="show('menu_button_{{ $record->id }}')" onmouseleave="hide('menu_button_{{ $record->id }}')"
+                {{--onclick="location.href='/'"--}}
+                class="m-1 border-2 border-black relative">
+                
                     <div class="w-full pl-3">
-                        <p class="text-sm">
-                            投稿者：{{ $record->user->name }}
-                        </p>
                         <a href="/records/{{ $record->id }}" class="text-3xl font-medium text-blue-600 underline dark:text-blue-500 hover:no-underline">
                             {{ $record->title }}
                         </a>
                     </div>
-
-                    @can('delete', $record)
-                        <div class="w-20 flex justify-center pt-3">
+                    
+                    @can('edit', $record)
+                        <button id="menu_button_{{ $record->id }}" onmouseover="show('menu_button_{{ $record->id }}')" class="absolute hidden z-10 right-1 top-1" onclick="showMenu({{ $record->id }})">
+                            <svg class="h-6 w-6 text-slate-900"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1" />
+                                <circle cx="12" cy="5" r="1" />
+                                <circle cx="12" cy="19" r="1" />
+                            </svg>
+                        </button>
+                    @endcan
+                    
+                    <div id="menu_{{ $record->id }}" onmouseover="show(this)" onmouseleave="hide(this)" class="absolute hidden z-30 right-3 top-1 bg-white border rounded border-black">
+                        @can('update', $record)
+                            <a href="/records/{{ $record->id }}/edit" onmouseover="selected(this)" onmouseleave="unselected(this)" class="block mt-1 py-1 px-3">
+                                投稿を編集する
+                            </a>
+                        @endcan
+                        @can('delete', $record)
                             <form action="/records/{{ $record->id }}" id="form_{{ $record->id }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" onclick="deletePost({{ $record->id }})" class="px-2 py-1 bg-red-400 text-white font-semibold rounded hover:bg-red-500">
-                                    削除
-                                </button> 
+                                <button type="button" onmouseover="selectedDelete(this)" onmouseleave="unselectedDelete(this)" onclick="deletePost({{ $record->id }})" class="mb-1 py-1 px-3 text-red-600">
+                                    投稿を削除する
+                                </button>
                             </form>
+                        @endcan
+                    </div>
+                
+                <div class="pl-9 flex flex-wrap">
+                    <div class="flex mr-3">
+                        <svg class="shrink-0 h-6 w-6 text-slate-900"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+        
+                        <p>{{ $record->user->name }}</p>
+                    </div>
+                
+                    <div class="flex">
+                        <svg class="shrink-0 h-6 w-6 text-slate-900"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z"/>
+                            <circle cx="12" cy="12" r="9" />
+                            <polyline points="12 7 12 12 15 15" />
+                        </svg>
+                    
+                        <div>
+                            {{ $record->created_at->toDateString() }}
                         </div>
-                    @endcan
+                        
+                        <svg class="ml-3 shrink-0 h-6 w-6 text-slate-900"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z"/>
+                            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -5v5h5" />
+                            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 5v-5h-5" />
+                        </svg>
+                        
+                        <div>
+                            {{ $record->updated_at->toDateString() }}
+                        </div>
+                    </div>
                 </div>
-                
-                <p class="pl-3 py-1 text-2xl">
+                    
+                <p class="pl-9">
+                    <span class="inline-block">
                     @if($record->first_player_name === null)
-                        先手：匿名
+                        匿名
                     @else
-                        先手：{{ $record->first_player_name }}
+                        {{ $record->first_player_name }}
                     @endif
-                    ‐
+                    </span>
+                    <span class="inline-block">‐
                     @if($record->second_player_name === null)
-                        後手：匿名
+                        匿名
                     @else
-                        後手：{{ $record->second_player_name }}
+                        {{ $record->second_player_name }}
                     @endif
+                    </span>
                 </p>
-                
-                <p class="pl-7 py-1">
+            
+                <p class="pl-9">
                     @isset($record->first_player_strategy)
                         ▲{{ $record->first_player_strategy }}
                     @endisset
@@ -69,11 +123,7 @@
                     @endisset
                 </p>
                 
-                @isset($record->remark)
-                    <p class="pl-7 py-1">備考：{{ $record->remark }}</p>
-                @endisset
-                
-                <p class="text-sm pl-7 py-1">コメント数：{{ count($record->comments) }}</p>
+                <p class="text-sm pl-9 py-1">コメント数：{{ count($record->comments) }}</p>
             </div>
         @endforeach
         
@@ -88,6 +138,55 @@
                 if (confirm('削除すると復元できません。\n本当に削除しますか？')) {
                     document.getElementById(`form_${id}`).submit();
                 }
+            }
+            
+            function show(elementId) {
+                const element = document.getElementById(elementId);
+                element.classList.remove("hidden");
+                element.classList.add("block");
+            }
+        
+            function hide(elementId) {
+                const element = document.getElementById(elementId);
+                element.classList.remove("block");
+                element.classList.add("hidden");
+            }
+            
+            let ID = null;
+            
+            function showMenu(id) {
+                document.body.classList.add("overflow-hidden");
+                hide(`menu_button_${id}`);
+                show(`menu_${id}`);
+                show('menu_cover');
+                ID = id;
+            }
+            
+            function hideMenu() {
+                document.body.classList.remove("overflow-hidden");
+                hide('menu_cover');
+                hide('menu_' + ID);
+                ID = null;
+            }
+            
+            function selected(x) {
+                x.classList.remove("bg-white", "text-black");
+                x.classList.add("bg-[#0636C5]", "text-white");
+            }
+        
+            function unselected(x) {
+                x.classList.remove("bg-[#0636C5]", "text-white");
+                x.classList.add("bg-white", "text-black");
+            }
+            
+            function selectedDelete(x) {
+                x.classList.remove("bg-white", "text-red-600");
+                x.classList.add("bg-red-600", "text-white");
+            }
+        
+            function unselectedDelete(x) {
+                x.classList.remove("bg-red-600", "text-white");
+                x.classList.add("bg-white", "text-red-600");
             }
         </script>
 </x-app-layout>

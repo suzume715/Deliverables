@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
 Route::controller(RecordController::class)->middleware(['auth'])->group(function(){
     Route::get('/', 'index')->name('index');
+    Route::post('/', 'search')->name('search');
     Route::get('/records/create', 'create')->name('create');
     Route::get('/records/{record}', 'show')->name('show');
     Route::post('/records', 'store')->name('store');
